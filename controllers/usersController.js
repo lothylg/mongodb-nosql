@@ -1,4 +1,4 @@
-const { User, Thought } = require('../models');
+// const { User, Thought } = require('../models');
 
 module.exports = {
   // Get all users
@@ -38,7 +38,7 @@ module.exports = {
   },
 
   // Delete a user and remove them from the Thought
-  async deleteThought(req, res) {
+  async deleteUser(req, res) {
     try {
       const user = await User.findByIdAndRemove({ _id: req.params.userId });
 

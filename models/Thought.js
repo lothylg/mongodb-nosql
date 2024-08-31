@@ -1,27 +1,5 @@
 const { Schema, model } = require('mongoose');
 
-// Reaction Schema
-const reactionSchema = new Schema({
-  reactionId: {
-    type: Schema.Types.ObjectId,
-    default: () => new Types.ObjectId()
-  },
-  reactionBody: {
-    type: String,
-    required: true,
-    maxlength: 280
-  },
-  username: {
-    type: String,
-    required: true
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-    get: (timestamp) => dateFormat(timestamp)
-  }
-});
-
 // Thought Schema
 const thoughtSchema = new Schema({
   thoughtText: {
@@ -39,16 +17,23 @@ const thoughtSchema = new Schema({
     type: String,
     required: true
   },
-  reactions: [reactionSchema]
-});
+  reactions: [reactionSchema],
+},
+  {
+    toJSON: {
+      virtuals: true,
+    },
+    id: false,
+  }
+);
 
 // Function to format timestamp
 function dateFormat(timestamp) {
   return new Date(timestamp).toISOString();
 }
 
-// Define a virtual property 'reactionCount' on the Thought schema
-thoughtSchema.virtual('reactionCount').get(function() {
+// virtual property reactionCount on the Thought schema
+thoughtSchema.virtual('reactionCount').get(function () {
   return this.reactions.length;
 });
 

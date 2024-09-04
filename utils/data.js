@@ -120,16 +120,14 @@ const getRandomArrItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
 const getRandomArrString = (arr) => String(arr[Math.floor(Math.random() * arr.length)]);
 
 // Gets a random full name
-const getRandomName = () =>
-  `${getRandomArrItem(usernames)} ${getRandomArrItem(usernames)}`;
+const getRandomName = () => `${getRandomArrItem(usernames)}`;
 
 // Function to generate random assignments that we can add to student object.
 const getRandomThoughts = (int) => {
   const results = [];
   for (let i = 0; i < int; i++) {
     results.push({
-      thoughts: getRandomArrItem(thoughts),
-      score: Math.floor(Math.random() * (99 - 70 + 1) + 70),
+      thoughts: getRandomArrItem(thoughts)
     });
   }
   return results;
@@ -140,8 +138,11 @@ const getRandomEmail = () => getRandomArrItem(emails);
 
 const getRandomReaction = () => getRandomArrString(reactions);
 
+const getRandomUser = () => getRandomArrItem(usernames);
+
+
 
 // Export the functions for use in seed.js
-module.exports = { getRandomName, getRandomThoughts, getRandomEmail, getRandomReaction };
+module.exports = { getRandomName, getRandomThoughts, getRandomEmail, getRandomReaction, getRandomUser };
 
   

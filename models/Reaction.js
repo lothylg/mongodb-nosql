@@ -1,4 +1,5 @@
 const { Schema, Types } = require('mongoose');
+ 
 
 // Reaction Schema
 const reactionSchema = new Schema({
@@ -17,8 +18,7 @@ const reactionSchema = new Schema({
     },
     createdAt: {
         type: Date,
-        default: Date.now,
-        get: (timestamp) => dateFormat(timestamp)
+        default: Date.now
     },
 },
     {
@@ -28,5 +28,9 @@ const reactionSchema = new Schema({
         id: false,
     }
 );
+
+function dateFormat(timestamp) {
+    return new Date(timestamp).toISOString();
+  }
 
 module.exports = reactionSchema;

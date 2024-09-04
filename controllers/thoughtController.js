@@ -1,15 +1,26 @@
-// const { Thought, User } = require('../models');
+const { Thought, User } = require('../models');
 
 module.exports = {
     //get all thoughts
-    async getThoughts(req, res) {
+    // async getThoughts(req, res) {
+    //     try {
+    //         const thoughts = await Thought.find({}).populate('User');
+    //         res.json(thoughts);
+    //     } catch (err) {
+    //         console.log(err);
+    //         res.status(500).json(err);
+    //     }
+    // },
+
+    async getThoughts(req,res) {
         try {
-            const thoughts = await Thought.find({}).populate('User');
-            res.json(thoughts);
+            const allThoughts = await Thought.find({});
+            res.json(allThoughts)
         } catch (err) {
             console.log(err);
-            res.status(500).json(err);
+            res.status(500).json(err)
         }
+
     },
     //get a single thought by ID
     async getSingleThought(req, res) {

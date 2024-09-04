@@ -1,65 +1,56 @@
 const connection = require('../config/connection');
-const { Thought, User } = require('../models');
-const { getRandomName, getRandomThoughts, getRandomEmail, getRandomReaction, getRandomArrItem } = require('./data');
-
-connection.on('error', (err) => console.error(err));
+const { Thought, User, Reaction } = require('../models');
+const { getRandomName, getRandomThoughts, getRandomEmail, getRandomReaction, getRandomUser } = require('./data');
 
 connection.once('open', async () => {
-  console.log('connected');
+    console.log('connected');
+    
+    // Delete the collections if they exist
+    await Thought.deleteMany({});
+    await User.deleteMany({});
 
-  // Delete the collections if they exist
-  let thoughtCheck = await connection.db.listCollections({ name: 'thoughts' }).toArray();
-  if (thoughtCheck.length) {
-    await connection.dropCollection('thoughts');
-  }
+    const users = [];
+    const thoughts = getRandomThoughts(25);
 
-  let usersCheck = await connection.db.listCollections({ name: 'users' }).toArray();
-  if (usersCheck.length) {
-    await connection.dropCollection('users');
-  }
+    for (let i = 0; i < 20; i++) {
+        try {
+            const user = await User.create({
+                username: getRandomUser(),
+                email: getRandomEmail(),
+                thoughts: [],
+                friends: []
+            });
 
-  const users = [];
-const usedEmails = new Set();
+            users.push(user);
 
-for (let i = 0; i < 25; i++) {
-  let email;
+            // Assign thoughts to the user
+            const randomThought = thoughts[Math.floor(Math.random() * thoughts.length)];
+            const thoughtText = typeof randomThought === 'object' ? randomThought.thoughts : randomThought; // Get the thought text as a string
 
-  // Ensure a unique email is generated
-  do {
-    email = getRandomEmail();
-  } while (usedEmails.has(email));
+            const thought = await Thought.create({
+                thoughtText: thoughtText,
+                username: user.username,
+                reactions: []
+            });
 
-  usedEmails.add(email);
+            user.thoughts.push(thought._id);
+            await user.save();
 
-  users.push({
-    username: getRandomName(),
-    email: email,
-  });
-}
+            // Create a reaction for the thought
+            const reaction = await Reaction.create({
+                reactionBody: getRandomReaction(),
+                username: user.username
+            });
 
-  
+            thought.reactions.push(reaction);
+            await thought.save();
+        } catch (error) {
+            console.error('Error creating user:', error.message);
+        }
+    }
 
-  // Add users to the collection and await the results
-  const createdUsers = await User.create(users);
-
-  // Create thoughts with random usernames and reactions
-  const thoughts = getRandomThoughts(25).map(thought => ({
-    thoughtText: thought.thoughts, // thought text as a string
-    username: getRandomName(), // Assign a random username from the created users
-    reactions: [
-      {
-        reactionBody: getRandomReaction(), 
-        username: getRandomName(), // Random user for the reaction
-      }
-    ],
-  }));
-
-  // Add thoughts to the collection and await the results
-  await Thought.create(thoughts);
-
-
-  console.table(users);
-  console.table(thoughts);
-  console.info('Seeding complete! 🌱');
-  process.exit(0);
+    console.table(users);
+    console.table(thoughts);
+    console.info('Seeding complete! 🌱');
+    process.exit(0);
 });

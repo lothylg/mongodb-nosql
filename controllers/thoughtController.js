@@ -72,5 +72,19 @@ module.exports = {
         } catch (err) {
             res.status(500).json(err);
         }
+    },
+    async updateReaction (req,res){
+        try{
+            const reaction = await Thought.findOneAndUpdate(
+                { _id: req.params.thoughtId },
+                { $push: {reactions: req.body} },
+                { runValidators: true, new: true }
+            )
+            res.json(reaction);
+        } catch (err) {
+            res.status(500).json(err);
+        }
     }
 }
+
+//need controller action that will update thought with a reaction and take the reactoin object and add to the reactions array

@@ -9,6 +9,7 @@ connection.once('open', async () => {
     await Thought.deleteMany({});
     await User.deleteMany({});
 
+
     const users = [];
     const thoughts = getRandomThoughts(25);
 
@@ -21,6 +22,13 @@ connection.once('open', async () => {
                 friends: []
             });
 
+            // Generate random friends for the user
+            const randomFriendsCount = Math.floor(Math.random() * 10); // Generate a random number of friends
+            const friends = users.filter((u) => u !== user).slice(0, randomFriendsCount); // Select random friends from existing users
+
+            user.friends = friends.map((friend) => friend._id); // Assign friend IDs to the user
+            user.friendCount = friends.length; // Update the friendCount field
+
             users.push(user);
 
             // Assign thoughts to the user
@@ -30,19 +38,24 @@ connection.once('open', async () => {
             const thought = await Thought.create({
                 thoughtText: thoughtText,
                 username: user.username,
-                reactions: []
+                reactions: getRandomReaction()
             });
 
             user.thoughts.push(thought._id);
             await user.save();
 
-            // Create a reaction for the thought
-            const reaction = await Reaction.create({
-                reactionBody: getRandomReaction(),
-                username: user.username
-            });
+            // Generate random reactions for the thought
+            const randomReactionsCount = Math.floor(Math.random() * 5); // Generate a random number of reactions
+            for (let j = 0; j < randomReactionsCount; j++) {
+                const reaction = await Reaction.create({
+                    reactionBody: getRandomReaction(),
+                    username: user.username // Associate the reaction with the user who created it
+                });
 
-            thought.reactions.push(reaction);
+                thought.reactions.push(reaction);
+                await reaction.save(); // Save the reaction
+            }
+
             await thought.save();
         } catch (error) {
             console.error('Error creating user:', error.message);

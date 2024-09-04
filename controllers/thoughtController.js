@@ -25,7 +25,7 @@ module.exports = {
     //get a single thought by ID
     async getSingleThought(req, res) {
         try {
-            const thought = await Thought.find({ _id: req.params.thoughtId }).populate('users');
+            const thought = await Thought.find({ _id: req.params.thoughtId }).populate('username');
             if (!thought) {
                 return res.status(404).json({ message: "No thoughts associated with that ID!" });
             }

@@ -136,7 +136,7 @@ const getRandomThoughts = (int) => {
 // Gets a random email
 const getRandomEmail = () => getRandomArrItem(emails);
 
-const getRandomReaction = () => getRandomArrString(reactions);
+const getRandomReaction = () => getRandomThoughts(thoughts);
 
 const getRandomUser = () => getRandomArrItem(usernames);
 

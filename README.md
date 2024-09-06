@@ -8,6 +8,8 @@ This code will allow the user to be able create users, thoughts, and react to th
 After cloning the code, run a npm install and I'd suggest using nomdemon server.js
 
 ### links to the deployed application 
+Video of working application: https://drive.google.com/file/d/1Sl33tbRLHkph8kg280Pz3ueFnzpg0hhN/view
+
 
 
 ### screenshots

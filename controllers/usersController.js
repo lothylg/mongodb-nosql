@@ -124,7 +124,7 @@ async addFriend(req, res) {
   try {
     const user = await User.findOneAndUpdate(
       { _id: req.params.userId },
-      { $addToSet: { friends: req.body.friendId } },
+      { $addToSet: { friends: req.body._id } },
       { new: true }
     );
 
@@ -143,7 +143,7 @@ async deleteFriend(req, res) {
   try {
     const user = await User.findOneAndUpdate(
       { _id: req.params.userId },
-      { $pull: { friends: req.params.friendId } },
+      { $pull: {friends: req.params.friendId }},
       { new: true }
     );
 
